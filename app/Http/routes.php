@@ -41,5 +41,8 @@ Route::get('/study/username/{name?}', 'Study\IndexController@username')->where([
 Route::get('/study/upload', 'Study\IndexController@upload');
 Route::post('/study/doupload', 'Study\IndexController@doupload');
 
+// 日志记录
+Route::get('/study/log', 'Study\IndexController@log');
+
 // 资源路由（将剩余未定义的方法定义）
 Route::resource('study/index', 'Study\IndexController');

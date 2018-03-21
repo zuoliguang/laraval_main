@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Study;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Log;
 
 class IndexController extends Controller
 {
@@ -126,7 +127,7 @@ public function test_session()
     session(['key' => 'value']);
     // 获取所有的 Session 数据
     $data = $request->session()->all();
-    
+
     // 将一个新的值添加到 Session 数组内
     $request->session()->push('user.teams', 'developers');
 
@@ -138,9 +139,24 @@ public function test_session()
     $request->session()->flush();
 }
 
-/*-------------------------------------------------------------*/
+/*-----日志--------------------------------------------------------*/
 
-
+	public function log()
+	{
+		// 日志文件默认记录的地址 APP_PATH/storage/logs/laravel.log
+		// 日志的信息格式可以自己定义
+		// 实际开发中会将该文件保存到根路径下或者项目之外
+		$message = 'this is an log infomation for laravel study!!!!!!';
+		Log::emergency($message.'-emergency '.PHP_EOL);
+		Log::alert($message.'-alert '.PHP_EOL);
+		Log::critical($message.'-critical '.PHP_EOL);
+		Log::error($message.'-error '.PHP_EOL);
+		Log::warning($message.'-warning '.PHP_EOL);
+		Log::notice($message.'-notice '.PHP_EOL);
+		Log::info($message.'-info '.PHP_EOL);
+		Log::debug($message.'-debug '.PHP_EOL);
+		return response('日志结束');
+	}
 
 
 /*-------------------------------------------------------------*/
