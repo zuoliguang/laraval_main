@@ -37,10 +37,11 @@
     </head>
     <body>
         <div class="container">
-            <div class="content">
-                <div class="title">Laravel 5</div>
-                <div class="title">{{ $title }}</div>
-            </div>
+            <form method="POST" action="/postdata">
+                {{ csrf_field() }}
+                <input type="text" name="test" value="{{ $test }}">
+                <button type="submit">submit</button>
+            </form>
         </div>
     </body>
 </html>
