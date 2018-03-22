@@ -3,9 +3,14 @@
 namespace App\Http\Controllers\Study;
 
 use App\Http\Controllers\Controller;
+
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
 
 class IndexController extends Controller
 {
@@ -99,44 +104,81 @@ public function upload()
 public function doupload(Request $request)
 {
 	$file = $request->file('file');
-
+	$file_path = ''; // 上传后的文件地址 
 	// 验证文件是否有效
 	if ($file->isValid()) {
-		$path = $file->path();
-		$extension = $file->extension();
-		$size = filesize($path);
-
-		var_dump($path);echo "<pre>";
-		var_dump($extension);echo "<pre>";
-		var_dump($size);echo "<pre>";
+		$path = $file->path(); // 临时文件的存放地址
+		$name = $file->getClientOriginalName(); // 图片名称
+		$ext = $file->getClientOriginalExtension(); // 图片格式
+		$size = $file->getClientSize(); // 图片大小
+		$file_content = file_get_contents($path);
+		$file_name = date('Y-m-d-H-i-s-').$name;
+		Storage::disk('local')->put($file_name, $file_content);
+		$file_path = config()->get('filesystems.disks.local.root')."/".$file_name;
+	}
+	
+	if (!empty($file_path)) {
+		echo '文件上传成功，地址：'.$file_path;
+	} else {
+		echo '文件上传失败';
 	}
 }
 
-public function test_session()
+// 框架的存储器
+public function cache()
 {
-	// --------------------------全局函数 sesseion();
-	// --------------------------HTTP 请求实例 $request->session()
-	// 获取 Session 中的一条数据...
-    $value = session('key');
-    $value = $request->session()->get('key', 'default');
+	// 存储
+	Cache::add('kkk', 'zuoliguang', 300);
+	$v = Cache::get('kkk');
 
-    // 指定一个默认值...
-    $value = session('key', 'default');
-    $request->session()->put('key', 'value');
-    // 在 Session 中存储一条数据...
-    session(['key' => 'value']);
-    // 获取所有的 Session 数据
-    $data = $request->session()->all();
+	// 永久存储
+	Cache::forever('fff', 'zlgcg');
+	$v = Cache::get('fff');
 
-    // 将一个新的值添加到 Session 数组内
-    $request->session()->push('user.teams', 'developers');
+	// 删除
+	Cache::forget('kkk'); // 删除指定的信息
+	Cache::flush(); // 删除所有
 
-    // 从 Session 检索并且删除一个项目
-    $value = $request->session()->pull('key', 'default');
+	// var_dump($v);
+}
+
+public function session(Request $request)
+{
+// --------------------------全局函数 sesseion();
+// --------------------------HTTP 请求实例 $request->session()
+// 1、session 
+	// 存储
+	session(['kkk' => 'zuoliguanghhhh']);
+	// 获取
+	$v = session('kkk');
+	// 指定默认值
+	$v = session('qqq', 'default');
+
+	// var_dump($v);
+
+// 2、$request->session() 存储
+	// 存储
+	$request->session()->put('aaa', 'zuoliguangaaaa');
+	$request->session()->put('bbb', 'zuoliguangbbbb');
+	// 添加新值
+	$request->session()->push('user.teams', 'developers');
+
+	// 删除
+	$v = $request->session()->pull('bbb', 'default_bbb');
+
+	// var_dump($v);
+
+	// 获取
+	$v = $request->session()->get('aaa'); // 获取指定信息
+	$vs = $request->session()->all(); // 获取所有信息
+	
     // 删除
     $request->session()->forget('key');
     // 全部删除
     $request->session()->flush();
+
+	var_dump($vs);
+
 }
 
 /*-----日志--------------------------------------------------------*/

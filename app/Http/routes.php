@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('welcome', ['title'=>'tttttt']);
+    return view('welcome', ['title'=>'zuoliguang']);
 });
 
 /*------------学习模块--------------------------------------*/
@@ -43,6 +43,10 @@ Route::post('/study/doupload', 'Study\IndexController@doupload');
 
 // 日志记录
 Route::get('/study/log', 'Study\IndexController@log');
+
+// 缓存
+Route::get('/study/cache', 'Study\IndexController@cache');
+Route::get('/study/session', 'Study\IndexController@session');
 
 // 资源路由（将剩余未定义的方法定义）
 Route::resource('study/index', 'Study\IndexController');
