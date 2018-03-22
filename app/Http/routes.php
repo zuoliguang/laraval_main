@@ -48,5 +48,11 @@ Route::get('/study/log', 'Study\IndexController@log');
 Route::get('/study/cache', 'Study\IndexController@cache');
 Route::get('/study/session', 'Study\IndexController@session');
 
+// 数据库操作 
+Route::get('/study/user/add', 'Study\IndexController@db_add_user');
+Route::get('/study/user/update', 'Study\IndexController@db_update_user');
+Route::get('/study/user/get', 'Study\IndexController@db_get_user');
+Route::get('/study/user/del', 'Study\IndexController@db_del_user');
+
 // 资源路由（将剩余未定义的方法定义）
 Route::resource('study/index', 'Study\IndexController');
