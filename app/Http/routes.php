@@ -54,6 +54,9 @@ Route::get('/study/user/update', 'Study\IndexController@db_update_user');
 Route::get('/study/user/get', 'Study\IndexController@db_get_user');
 Route::get('/study/user/del', 'Study\IndexController@db_del_user');
 
+// 模型 Eloquent ORM
+Route::get('/study/model', 'Study\IndexController@model');
+
 
 // 资源路由（将剩余未定义的方法定义）
 Route::resource('study/index', 'Study\IndexController');

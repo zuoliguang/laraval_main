@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Study;
 
+use App\Member;
+
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
@@ -332,13 +334,97 @@ public function session(Request $request)
 	}
 
 
-/*---------模型类--------------------------------------------*/
+/*---------模型类 数据库操作-----------------------------*/
+
+	public function model()
+	{
+		header("Content-type: text/html; charset=utf-8");
+
+		// 1、获取全部数据
+		// $members = Member::all(); 
+		
+		// 2、获取条件搜索数据
+		// $members = Member::where('id', '<', 10)->get(); 
+
+		// 3、分块结果
+		// Member::chunk(2, function($members){
+		// 	foreach ($members as $member) {
+		// 		echo $member->name;
+		// 		echo '<br/>';
+		// 	}
+		// 	echo '------------------<br/>';
+		// });
+		
+		// 4、取回单个信息
+		// $member = Member::find(1);
+		// $member = Member::where('id', '>', 10)->first();
+		// var_dump($member);
+		
+		// 5、取回指定数据集
+		// $members = Member::find([12, 13, 14]);
+		// foreach ($members as $member) {
+		// 	echo $member->name;
+		// 	echo "<br/>";
+		// }
+		
+		// 6、添加
+		// $member = new Member;
+		// $member->name 		= 'model';
+		// $member->age 		= 40;
+		// $member->tel 		= '88888888';
+		// $member->address 	= 'peking zhanghao dizhi hahah';
+		// $member->score 		= 99;
+		// $member->class 		= '2-9';
+		// $member->ext_info 	= 'this is a model test model info';
+		// $member->save();
+		
+		// 7、更新
+		// $member = Member::find(14);
+		// $member->name = 'test_mode';
+		// $member->save();
+		
+		// 8、批量更新
+		// Member::where('id', 8)->update(['name'=>'test_update']);
+		// Member::where('id', '>', 8)->where('id', '<=', 13)->update(['name'=>'test_update_agin']);
+
+		// 9、删除
+		// $member = Member::find(7);
+		// $member->delete();
+
+		// 10、批量删除
+		// Member::destroy(1);
+		// Member::destroy([1, 2, 3]);
+		
+		// 11、获取关联信息
+		// $member = Member::find(2);
+
+		// $pwd = $member->pwd; // 一对一
+		// var_dump($pwd->pwd);
+		
+		// $says = $member->say; // 一对多
+		// foreach ($says as $say) {
+		// 	var_dump($say->say);
+		// 	echo '<br/>';
+		// }
+		
+		echo 'ss111';
+	}
+
+
+
+/*---------说明--------------------------------------------*/
 
 	// 1、laravel 和 Yii 框架在这方面使用的是一样的；
-	// 2、ActiveRecord 创建模型类 实现 数据间的交互关联；
+	// 2、ActiveRecord 创建模型类 实现 数据间的交互关联；参考上面 "模型类 数据库操作" 笔记学习
 	// 3、对于开发有要求的企业进行操作处理;
 	// 4、此处暂不做深入讲解，上面讲解的数据库操作细节可全部移至模型中展开代码操作；
 	// 5、致此 初入 laravel 框架完成 简单初级的 MVC 框架开发；
 	// 6、后续还会对该框架进行深入的开发研究
+
+/*--------开发期间遇到文件缓存测试进度慢的问题----------------------------------------*/
+	// 导致问题的原因 ：
+	// 本地开发默认会将 PHP 配置文件的 opcache.enable=0 注释掉
+	// 造成 60 秒的缓存更新时间，去掉注释 将缓存关掉即可 实时测试开发。
+
 
 }
