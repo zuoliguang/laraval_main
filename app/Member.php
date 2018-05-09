@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Pwd;
+use App\Say;
 use Illuminate\Database\Eloquent\Model;
 
 class Member extends Model

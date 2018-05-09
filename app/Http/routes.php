@@ -57,6 +57,9 @@ Route::get('/study/user/del', 'Study\IndexController@db_del_user');
 // 模型 Eloquent ORM
 Route::get('/study/model', 'Study\IndexController@model');
 
+// 后期测试用的开发
+Route::get('/test', 'Study\IndexController@test');
+
 
 // 资源路由（将剩余未定义的方法定义）
 Route::resource('study/index', 'Study\IndexController');

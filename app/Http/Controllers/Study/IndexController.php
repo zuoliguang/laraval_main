@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Study;
 use App\Member;
 
 use App\Http\Controllers\Controller;
+use Event;
+use App\Events\TestEvent;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -62,27 +64,27 @@ class IndexController extends Controller
 
 	public function postdata(Request $request)
 	{
-		$uri = $request->path(); // 获取实际路径
-		$url = $request->url(); // 获取地址
-		$fullUrl = $request->fullUrl(); // 获取地址
-		$is_post = $request->isMethod('post'); // 是否是post
-		$is_get = $request->isMethod('get'); // 是否是get
+		// $uri = $request->path(); // 获取实际路径
+		// $url = $request->url(); // 获取地址
+		// $fullUrl = $request->fullUrl(); // 获取地址
+		// $is_post = $request->isMethod('post'); // 是否是post
+		// $is_get = $request->isMethod('get'); // 是否是get
 		$_token = $request->_token;
-		$test = $request->test;
-		$all = $request->all(); // 获取传入的所有参数
-		$isHas = $request->has(['name', 'email']); // 是否有 name、email 字段信息
-		// $filled = $request->filled('name'); // 是否存在值并且不为空 (laravel 5.5有)
+		// $test = $request->test;
+		// $all = $request->all(); // 获取传入的所有参数
+		// $isHas = $request->has(['name', 'email']); // 是否有 name、email 字段信息
 
-		var_dump($uri);echo "<pre>";
-		var_dump($url);echo "<pre>";
-		var_dump($fullUrl);echo "<pre>";
-		var_dump($is_post);echo "<pre>";
-		var_dump($is_get);echo "<pre>";
-		var_dump($_token);echo "<pre>";
-		var_dump($test);echo "<pre>";
-		var_dump($all);echo "<pre>";
-		var_dump($isHas);echo "<pre>";
-		// var_dump($filled);echo "<pre>";
+		// var_dump($uri);echo "<pre>";
+		// var_dump($url);echo "<pre>";
+		// var_dump($fullUrl);echo "<pre>";
+		// var_dump($is_post);echo "<pre>";
+		// var_dump($is_get);echo "<pre>";
+		var_dump($_token);
+		// var_dump($test);echo "<pre>";
+		// var_dump($all);echo "<pre>";
+		// var_dump($isHas);echo "<pre>";
+		
+		var_dump(csrf_token());
 	}
 
 	public function user($id)
@@ -192,14 +194,14 @@ public function session(Request $request)
 		// 日志的信息格式可以自己定义
 		// 实际开发中会将该文件保存到根路径下或者项目之外
 		$message = 'this is an log infomation for laravel study!!!!!!';
-		Log::emergency($message.'-emergency '.PHP_EOL);
-		Log::alert($message.'-alert '.PHP_EOL);
-		Log::critical($message.'-critical '.PHP_EOL);
-		Log::error($message.'-error '.PHP_EOL);
-		Log::warning($message.'-warning '.PHP_EOL);
-		Log::notice($message.'-notice '.PHP_EOL);
-		Log::info($message.'-info '.PHP_EOL);
-		Log::debug($message.'-debug '.PHP_EOL);
+		Log::emergency($message.'-emergency ');
+		Log::alert($message.'-alert ');
+		Log::critical($message.'-critical ');
+		Log::error($message.'-error ');
+		Log::warning($message.'-warning ');
+		Log::notice($message.'-notice ');
+		Log::info($message.'-info ');
+		Log::debug($message.'-debug ');
 		return response('日志结束');
 	}
 
@@ -341,73 +343,84 @@ public function session(Request $request)
 		header("Content-type: text/html; charset=utf-8");
 
 		// 1、获取全部数据
-		// $members = Member::all(); 
+		$members = Member::all(); 
 		
 		// 2、获取条件搜索数据
-		// $members = Member::where('id', '<', 10)->get(); 
+		$members = Member::where('id', '<', 10)->get(); 
 
 		// 3、分块结果
-		// Member::chunk(2, function($members){
-		// 	foreach ($members as $member) {
-		// 		echo $member->name;
-		// 		echo '<br/>';
-		// 	}
-		// 	echo '------------------<br/>';
-		// });
+		Member::chunk(2, function($members){
+			foreach ($members as $member) {
+				echo $member->name;
+				echo '<br/>';
+			}
+			echo '------------------<br/>';
+		});
 		
 		// 4、取回单个信息
-		// $member = Member::find(1);
-		// $member = Member::where('id', '>', 10)->first();
-		// var_dump($member);
+		$member = Member::find(1);
+		$member = Member::where('id', '>', 10)->first();
+		var_dump($member);
 		
 		// 5、取回指定数据集
-		// $members = Member::find([12, 13, 14]);
-		// foreach ($members as $member) {
-		// 	echo $member->name;
-		// 	echo "<br/>";
-		// }
+		$members = Member::find([12, 13, 14]);
+		foreach ($members as $member) {
+			echo $member->name;
+			echo "<br/>";
+		}
 		
 		// 6、添加
-		// $member = new Member;
-		// $member->name 		= 'model';
-		// $member->age 		= 40;
-		// $member->tel 		= '88888888';
-		// $member->address 	= 'peking zhanghao dizhi hahah';
-		// $member->score 		= 99;
-		// $member->class 		= '2-9';
-		// $member->ext_info 	= 'this is a model test model info';
-		// $member->save();
+		$member = new Member;
+		$member->name 		= 'model';
+		$member->age 		= 40;
+		$member->tel 		= '88888888';
+		$member->address 	= 'peking zhanghao dizhi hahah';
+		$member->score 		= 99;
+		$member->class 		= '2-9';
+		$member->ext_info 	= 'this is a model test model info';
+		$member->save();
 		
 		// 7、更新
-		// $member = Member::find(14);
-		// $member->name = 'test_mode';
-		// $member->save();
+		$member = Member::find(14);
+		$member->name = 'test_mode';
+		$member->save();
 		
 		// 8、批量更新
-		// Member::where('id', 8)->update(['name'=>'test_update']);
-		// Member::where('id', '>', 8)->where('id', '<=', 13)->update(['name'=>'test_update_agin']);
+		Member::where('id', 8)->update(['name'=>'test_update']);
+		Member::where('id', '>', 8)->where('id', '<=', 13)->update(['name'=>'test_update_agin']);
 
 		// 9、删除
-		// $member = Member::find(7);
-		// $member->delete();
+		$member = Member::find(7);
+		$member->delete();
 
 		// 10、批量删除
-		// Member::destroy(1);
-		// Member::destroy([1, 2, 3]);
+		Member::destroy(1);
+		Member::destroy([1, 2, 3]);
 		
 		// 11、获取关联信息
-		// $member = Member::find(2);
+		$member = Member::find(2);
 
-		// $pwd = $member->pwd; // 一对一
-		// var_dump($pwd->pwd);
+		// 12、获取一对一的数据
+		$pwd = $member->pwd; // 一对一
+		var_dump($pwd->pwd);
 		
-		// $says = $member->say; // 一对多
-		// foreach ($says as $say) {
-		// 	var_dump($say->say);
-		// 	echo '<br/>';
-		// }
+		// 获取一对多的数据
+		$says = $member->say; // 一对多
+		foreach ($says as $say) {
+			var_dump($say->say);
+			echo '<br/>';
+		}
 		
-		echo 'ss111';
+	}
+
+
+	/**
+	 * 测试
+	 * @return [type] [description]
+	 */
+	public function test()
+	{
+		
 	}
 
 
