@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class TestEvent extends Event
+class Test1Event extends Event
 {
     use SerializesModels;
 
@@ -21,7 +21,7 @@ class TestEvent extends Event
     public function __construct($str='')
     {
         $this->testInfo .= $str;
-        echo $this->testInfo." -TestEvent 触发事件 ！";
+        echo $this->testInfo." -Test1Event 触发事件 ！";
         // Log::notice($this->testInfo.'-Event ');
     }
 }

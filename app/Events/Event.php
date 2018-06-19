@@ -10,8 +10,7 @@ abstract class Event
 	 * @var array
 	 */
 	protected $listen = [
-	    'App\Events\TestEvent' => [
-	        'App\Listeners\TestListener',
-	    ],
+	    'App\Events\TestEvent',
+	    'App\Events\Test1Event',
 	];
 }

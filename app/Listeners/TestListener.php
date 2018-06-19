@@ -17,6 +17,7 @@ class TestListener
     public function __construct()
     {
         //
+        echo "Listener 监听器";
     }
 
     /**
@@ -28,6 +29,7 @@ class TestListener
     public function handle(TestEvent $event)
     {
         $message = $event->testInfo;
-        Log::warning($message.'-Listener ');
+        echo $event->testInfo."-Listener";
+        // Log::warning($message.'-Listener ');
     }
 }

@@ -7,6 +7,7 @@ use App\Member;
 use App\Http\Controllers\Controller;
 use Event;
 use App\Events\TestEvent;
+use App\Events\Test1Event;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -21,6 +22,7 @@ class IndexController extends Controller
 {
 	function __construct()
 	{
+		header("Content-type: text/html; charset=utf-8");
 		$route = Route::current();
 		$name = Route::currentRouteName();
 		$action = Route::currentRouteAction();
@@ -149,9 +151,9 @@ public function cache()
 
 public function session(Request $request)
 {
-// --------------------------全局函数 sesseion();
-// --------------------------HTTP 请求实例 $request->session()
-// 1、session 
+	// --------------------------全局函数 sesseion();
+	// --------------------------HTTP 请求实例 $request->session()
+	// 1、session 
 	// 存储
 	session(['kkk' => 'zuoliguanghhhh']);
 	// 获取
@@ -161,7 +163,7 @@ public function session(Request $request)
 
 	// var_dump($v);
 
-// 2、$request->session() 存储
+	// 2、$request->session() 存储
 	// 存储
 	$request->session()->put('aaa', 'zuoliguangaaaa');
 	$request->session()->put('bbb', 'zuoliguangbbbb');
@@ -183,7 +185,6 @@ public function session(Request $request)
     $request->session()->flush();
 
 	var_dump($vs);
-
 }
 
 /*-----日志--------------------------------------------------------*/
@@ -214,20 +215,20 @@ public function session(Request $request)
 	{
 		// 1、单处理
 		$member = ['name'=>'zlhppppp', 'age'=>45, 'tel'=>'9999999999', 'address'=>'testkkkkkkkk', 'score'=>90, 'class'=>'3-5', 'ext_info'=>'hahahahaha'];
-		// DB::table('member')->insert($member); // 插入数据不返回id
-		// $id = DB::table('member')->insertGetId($member); // 插入数据返回id
-		// var_dump($id);
+		DB::table('member')->insert($member); // 插入数据不返回id
+		$id = DB::table('member')->insertGetId($member); // 插入数据返回id
+		var_dump($id);
 
 		// 2、批处理
 		$members = [
 			['name'=>'zlhxxxxx', 'age'=>45, 'tel'=>'9999999999', 'address'=>'testkkkkkkkk', 'score'=>90, 'class'=>'3-5', 'ext_info'=>'hahahahaha'],
 			['name'=>'zlhzzzzz', 'age'=>45, 'tel'=>'9999999999', 'address'=>'testkkkkkkkk', 'score'=>90, 'class'=>'3-5', 'ext_info'=>'hahahahaha']
 		];
-		// DB::table('member')->insert($members);
-		// echo "批量插入数据";
+		DB::table('member')->insert($members);
+		echo "批量插入数据";
 
 		// 3、sql操作 
-		// DB::insert('insert into users (id, name) values (?, ?)', [1, 'Dayle']);
+		DB::insert('insert into users (id, name) values (?, ?)', [1, 'Dayle']);
 	}
 
 	// 更新
@@ -238,23 +239,25 @@ public function session(Request $request)
 		DB::table('member')->where('id', 4)->update($data);
 
 		// 2、自增减
-		// DB::table('member')->where('id', 4)->increment('score'); // 自增
-		// DB::table('member')->where('id', 4)->decrement('score'); // 自减
+		DB::table('member')->where('id', 4)->increment('score'); // 自增
+		DB::table('member')->where('id', 4)->decrement('score'); // 自减
 		
 		// 3、sql 操作
-		// $affected_rows = DB::update('update users set votes = 100 where name = ?', ['John']);
+		$affected_rows = DB::update('update users set votes = 100 where name = ?', ['John']);
 		
 		// 4、数据库事务
-			// -----a、架构封装的 ( 第二参数定义在发生死锁时应该重新尝试事务的次数 )
-			// DB::transaction(function () {
-				// DB::table('users')->update(['votes' => 1]);
-				// DB::table('posts')->delete();
-			// }, 5);
-			// -----b、手动
-			// DB::beginTransaction(); // 开启事务
-			// DB::rollBack(); // 回滚事务
-			// DB::commit(); // 提交事务
-		
+		// -----a、架构封装的 ( 第二参数定义在发生死锁时应该重新尝试事务的次数 )
+		DB::transaction(function () {
+			DB::table('users')->update(['votes' => 1]);
+			DB::table('posts')->delete();
+		}, 5);
+		// -----b、手动
+		DB::beginTransaction(); // 开启事务
+		//业务代码TODO
+		if (false) {
+			DB::rollBack(); // 回滚事务
+		}
+		DB::commit(); // 提交事务
 	}
 
 	// 查询
@@ -325,14 +328,13 @@ public function session(Request $request)
 			// sql : select * from member where exists ( select 1 from m_pwd where m_pwd.m_id = member.id )
 			// 即找到 m_pwd 中有对应的 member 数据
 		var_dump($data);
-		
 	}
 
 	// 删除 
 	public function db_del_user()
 	{
 		DB::table('member')->where('id', 4)->delete();
-		// $deleted_rows = DB::delete('delete from users'); // sql 操作
+		$deleted_rows = DB::delete('delete from users'); // sql 操作
 	}
 
 
@@ -340,8 +342,6 @@ public function session(Request $request)
 
 	public function model()
 	{
-		header("Content-type: text/html; charset=utf-8");
-
 		// 1、获取全部数据
 		$members = Member::all(); 
 		
@@ -413,16 +413,18 @@ public function session(Request $request)
 		
 	}
 
-
-	/**
-	 * 测试
-	 * @return [type] [description]
-	 */
-	public function test()
+	// 事件
+	public function test_event()
 	{
-		
+		// 事件触发
+		Event::fire(new Test1Event(' zuoliguang test!'));
 	}
 
+
+	public function test()
+	{
+		echo "string";
+	}
 
 
 /*---------说明--------------------------------------------*/
